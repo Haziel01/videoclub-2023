@@ -4,7 +4,7 @@ const controller = require('../controllers/directors');
 
 router.post('/', controller.create);
 
-router.get('/', controller.list);
+router.get('/list/:page?', controller.list);
 
 router.get('/:id', controller.index);
 
