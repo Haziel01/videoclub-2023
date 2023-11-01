@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../controllers/users");
+const controller = require("../controllers/directors");
 
-/* GET users listing. */
 router.post("/", controller.create);
 
 router.get("/list/:page?", controller.list);
