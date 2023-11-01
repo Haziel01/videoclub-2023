@@ -26,7 +26,7 @@ class Director {
 	}
 
 	set lastName(v){
-		this._name = v;
+		this._lastName = v;
 	}
 }
 

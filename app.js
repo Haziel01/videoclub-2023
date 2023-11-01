@@ -5,6 +5,9 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const { expressjwt } = require('express-jwt');
+
+const jwtKey = "6968b4c8e4312a684fbfb34761c8a00a";
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -40,6 +43,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(expressjwt({secret: jwtKey, algorithms: ['HS256']})
+  .unless({path: ['/login']}));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
