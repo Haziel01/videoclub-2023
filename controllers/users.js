@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require('bcrypt');
+const Permission = require('../models/permission');
 const User = require("../models/user");
 
 async function create(req, res, next) {
@@ -8,15 +9,18 @@ async function create(req, res, next) {
   let email = req.body.email;
   let password = req.body.password;
   let saltKey = await bcrypt.genSalt(10);
+  let permissionId = req.body.permissionId; 
 
   const passwordHash = await bcrypt.hash(password, saltKey);
+  let permission = await Permission.findOne({ _id: permissionId });
 
   let user = new User({
     name: name,
     lastName: lastName,
     email: email,
     password: passwordHash,
-    saltKey: saltKey
+    saltKey: saltKey,
+    permission: permission
   });
 
   user.save().then((obj) => res.status(200).json({
@@ -62,12 +66,14 @@ function replace(req, res, next) {
   let lastName = req.body.lastName ? req.body.lastName : "";
   let email = req.body.email ? req.body.email : "";
   let password = req.body.password ? req.body.password : "";
+  let permission = req.body.permission ? req.body.permission: "";
 
   let user = new Object({
     _name: name,
     _lastName: lastName,
     _email: email,
-    _password: password
+    _password: password,
+    _permission: permission
   });
 
   User.findOneAndUpdate({ _id: id }, user, { new: true })
@@ -86,12 +92,14 @@ function update(req, res, next) {
   let lastName = req.body.lastName;
   let email = req.body.email;
   let password = req.body.password;
+  let permission = req.body.permission;
 
   let user = new Object();
   if (name) user._name = name;
   if (lastName) user._lastName = lastName;
   if (email) user._email = email;
   if (password) user._password = password;
+  if (permission) user.permission = permission;
 
   User.findOneAndUpdate({ _id: id }, user)
     .then((obj) => res.status(200).json({

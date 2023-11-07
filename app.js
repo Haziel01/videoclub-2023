@@ -5,9 +5,8 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-const { expressjwt } = require('express-jwt');
-
-const jwtKey = "6968b4c8e4312a684fbfb34761c8a00a";
+const acl = require("./config/aclConfig");
+const router = express.Router();
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -21,13 +20,20 @@ const bookingRouter = require('./routes/bookings');
 const awaitListRouter = require('./routes/awaitLists');
 
 const app = express();
+// const { expressjwt } = require('express-jwt');
+
+// const jwtKey = "6968b4c8e4312a684fbfb34761c8a00a";
+
 //mongodb://<dbUser>7:<dbPass>7@<URL>i<port>/<dbName>
 const url = "mongodb://localhost:27017/video-club";
-mongoose.connect(url);
+// Esta conexión permitirá que tu aplicación Node.js realice operaciones de lectura y escritura
+// en la base de datos, como guardar datos, recuperar información y más.
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 db.on('open', ()=>{
 	console.log("Conexión ok.");
+
 });
 
 db.on('error', ()=>{
@@ -44,8 +50,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(expressjwt({secret: jwtKey, algorithms: ['HS256']})
-  .unless({path: ['/login']}));
+// app.use(expressjwt({secret: jwtKey, algorithms: ['HS256']})
+//   .unless({path: ['/login']}));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

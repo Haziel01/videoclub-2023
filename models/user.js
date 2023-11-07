@@ -7,16 +7,21 @@ const schema = mongoose.Schema({
   _lastName: String,
   _email: String,
   _password: String,
-  _saltKey: String
+  _saltKey: String,
+  _permission: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Permission',
+  },
 });
 //clase
 class User {
-  constructor(name, lastName, email, password, saltKey) {
+  constructor(name, lastName, email, password, saltKey, permission) {
     this._name = name;
     this._lastName = lastName;
     this._email = email;
     this._password = password;
     this._saltKey = saltKey;
+    this._permission = permission;
   }
 
   get name() {
@@ -40,7 +45,7 @@ class User {
   }
 
   set email(v) {
-    this._email= v;
+    this._email = v;
   }
 
   get password() {
@@ -58,6 +63,14 @@ class User {
   set saltKey(v) {
     this._saltKey = v;
   }
+  get permission() {
+    return this._permission;
+  }
+
+  set permission(v) {
+    this._permission = v;
+  }
+
 }
 
 schema.loadClass(User);
