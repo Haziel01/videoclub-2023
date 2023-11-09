@@ -5,8 +5,12 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-const acl = require("./config/aclConfig");
 const router = express.Router();
+const config = require('config');
+const Acl = require("acl");
+const { expressjwt } = require("express-jwt");
+
+const jwtKey = config.get("secret.key");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -18,17 +22,13 @@ const genresRouter = require('./routes/genres');
 const copyRouter = require('./routes/copys');
 const bookingRouter = require('./routes/bookings');
 const awaitListRouter = require('./routes/awaitLists');
+const permissionRouter = require('./routes/permissions');
 
 const app = express();
-// const { expressjwt } = require('express-jwt');
-
-// const jwtKey = "6968b4c8e4312a684fbfb34761c8a00a";
 
 //mongodb://<dbUser>7:<dbPass>7@<URL>i<port>/<dbName>
-const url = "mongodb://localhost:27017/video-club";
-// Esta conexión permitirá que tu aplicación Node.js realice operaciones de lectura y escritura
-// en la base de datos, como guardar datos, recuperar información y más.
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+const url = config.get("dbChain");
+mongoose.connect(url);
 
 const db = mongoose.connection;
 db.on('open', ()=>{
@@ -40,6 +40,8 @@ db.on('error', ()=>{
 	console.log("No se ha podido conectar a la bd.");
 });
 
+const acl = new Acl(new Acl.mongodbBackend(db, "video-club"));
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
@@ -50,8 +52,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.use(expressjwt({secret: jwtKey, algorithms: ['HS256']})
-//   .unless({path: ['/login']}));
+app.use(expressjwt({secret: jwtKey, algorithms: ['HS256']})
+  .unless({path: ['/login','users']}));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
@@ -63,6 +65,7 @@ app.use('/genres', genresRouter);
 app.use('/copys', copyRouter);
 app.use('/bookings', bookingRouter);
 app.use('/awaitLists', awaitListRouter);
+app.use('/permissions', permissionRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -81,3 +84,5 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
+module.exports.acl = acl;
+

@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const config = require('config');
 const User = require('../models/user');
 
 function home(req, res, next){
@@ -10,7 +11,7 @@ function home(req, res, next){
 function login(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
-  const jwtKey = "6968b4c8e4312a684fbfb34761c8a00a";
+  const jwtKey = config.get("secret.key");
 
   User.findOne({"_email": email}).then(user => {
     if(user){
