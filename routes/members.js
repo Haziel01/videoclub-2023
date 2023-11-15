@@ -1,13 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/members");
-const { checkUserPermissions } = require("../middleware/checkPermissions");
 
-router.post("/", checkUserPermissions, controller.create);
+/* GET users listing. */
+router.post("/", controller.create);
+
 router.get("/list/:page?", controller.list);
+
 router.get("/:id", controller.index);
-router.put("/:id", checkUserPermissions, controller.replace);
-router.patch("/:id", checkUserPermissions, controller.update);
-router.delete("/:id", checkUserPermissions, controller.destroy);
+
+router.put("/:id", controller.replace);
+
+router.patch("/:id", controller.update);
+
+router.delete("/:id", controller.destroy);
 
 module.exports = router;

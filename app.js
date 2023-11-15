@@ -7,7 +7,6 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const router = express.Router();
 const config = require('config');
-const Acl = require("acl");
 const { expressjwt } = require("express-jwt");
 
 const jwtKey = config.get("secret.key");
@@ -39,8 +38,6 @@ db.on('open', ()=>{
 db.on('error', ()=>{
 	console.log("No se ha podido conectar a la bd.");
 });
-
-const acl = new Acl(new Acl.mongodbBackend(db, "video-club"));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -84,5 +81,4 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
-module.exports.acl = acl;
 
