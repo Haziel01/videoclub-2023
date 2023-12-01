@@ -13,40 +13,48 @@ function login(req, res, next) {
   const password = req.body.password;
   const jwtKey = config.get("secret.key");
 
-  User.findOne({"_email": email}).then(user => {
-    if(user){
-      bcrypt.hash(password, user.saltKey, (err, hash)=>{
-          if(err){
+  User.findOne({ _email: email })
+    .then((user) => {
+      if (user) {
+        bcrypt.hash(password, user.saltKey, (err, hash) => {
+          if (err) {
             // regresar 403
             res.status(403).json({
-                message: "Usuario o contraseña incorrecto",
-                obj: err
+              message: res.__("login.wrong"),
+              obj: err,
             });
           }
-          if(hash == user.password){
-              res.status(200).json({
-                message: "Login ok",
-                obj: jwt.sign({data: user.data, exp: Math.floor(Date.now()/1000)+600}, jwtKey)
-              });
-          }else{
+          if (hash == user.password) {
+            res.status(200).json({
+              message: res.__("login.ok"),
+              obj: jwt.sign(
+                { data: user.data, exp: Math.floor(Date.now() / 1000) + 600 },
+                jwtKey
+              ),
+            });
+          } else {
             // regresar 403
             res.status(403).json({
-              message: "Usuario o contraseña incorrecto",
+              message: res.__("login.wrong"),
               obj: null,
             });
           }
-      });
-    }else{
-      // regresar 403
+        });
+      } else {
+        // regresar 403
+        res.status(403).json({
+          message: res.__("login.wrong"),
+          obj: null,
+        });
+      }
+    })
+    .catch((ex) =>
       res.status(403).json({
-        message: "Usuario o contraseña incorrecto",
-        obj: null
-      });
-    }}).catch(ex => res.status(403).json({
-          // regresar 403
-          message: "Usuario o contraseña incorrecto",
-          obj: ex
-    }));
+        // regresar 403
+        message: res.__("login.wrong"),
+        obj: ex,
+      })
+    );
 }
 
 module.exports = {

@@ -15,10 +15,10 @@ async function create(req, res, next) {
   });
 
   awaitList.save().then((obj) => res.status(200).json({
-        message: "awaitList almacenado correctamente.",
+        message: res.__("Awaitlist.created"),
         obj: obj,
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo crear el awaitList.",
+        message: res.__("Awaitlist.notcreated"),
         obj: ex,
       }));
 }
@@ -30,10 +30,10 @@ function list(req, res, next) {
     limit: 5,
   };
   AwaitList.paginate({}, options).then((objs) => res.status(200).json({
-        message: "Lista de espera.",
+        message: res.__("Awaitlist.list"),
         obj: objs,
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo obtener la lista de espera.",
+        message: res.__("Awaitlist.not"),
         obj: ex,
       }));
 }
@@ -42,10 +42,10 @@ function index(req, res, next) {
   const id = req.params.id;
 
   AwaitList.findOne({ _id: id }).then((obj) => res.status(200).json({
-        message: `awaitList con el id ${id}`,
+        message: res.__('Awaitlist.index'),
         obj: obj,
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo consultar el awaitList.",
+        message: res.__("Awaitlist.noindex"),
         obj: ex,
       }));
 }
@@ -62,10 +62,10 @@ function replace(req, res, next) {
 
   AwaitList.findOneAndUpdate({ _id: id }, awaitList, { new: true })
     .then((obj) => res.status(200).json({
-        message: "AwaitList remplazado correctamente.",
+        message: res.__("Awaitlist.replaced"),
         obj: obj,
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo rempazar el awaitList.",
+        message: res.__("Awaitlist.notreplaced"),
         obj: ex,
       }));
 }
@@ -81,10 +81,10 @@ function update(req, res, next) {
 
   AwaitList.findOneAndUpdate({ _id: id }, awaitList)
     .then((obj) => res.status(200).json({
-        message: "AwaitList actualizado correctamente.",
+        message: res.__("Awaitlist.updated"),
         obj: obj,
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo actualizar el awaitList.",
+        message: res.__("Awaitlist.notupdated"),
         obj: ex,
       }));
 }
@@ -94,10 +94,10 @@ function destroy(req, res, next) {
 
   AwaitList.findByIdAndRemove({ _id: id })
     .then((obj) => res.status(200).json({
-        message: "AwaitList eliminado correctamente",
+        message: res.__("Awaitlist.destroy"),
         obj: obj,
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo eliminar el awaitList.",
+        message: res.__("Awaitlist.notdestroy"),
         obj: ex,
       }));
 }

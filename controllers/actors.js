@@ -11,11 +11,11 @@ function create(req, res, next) {
   });
 
   actor.save().then((obj) => res.status(200).json({
-        message: "Actor creado correctamente.",
+        message: res.__("Actor.created"),
         obj: obj,
       })).catch((ex) =>
       res.status(500).json({
-        message: "No se pudo almacenar el actor.",
+        message: res.__("Actor.notCreated"),
         obj: ex,
       }));
 }
@@ -27,10 +27,10 @@ function list(req, res, next) {
     limit: 5
   };
   Actor.paginate({},options).then((objs) => res.status(200).json({
-        message: "Lista de actores",
+        message: res.__("Actor.list"),
         obj: objs,
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo obtener la lista de actores",
+        message: res.__("Actor.noinfo"),
         obj: ex,
       }));
 }
@@ -39,10 +39,10 @@ function index(req, res, next) {
   const id = req.params.id;
 
   Actor.findOne({ _id: id }).then((obj) => res.status(200).json({
-        message: `Actor con el id ${id}`,
+        message: res.__("Actor.index"),
         obj: obj,
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo consultar el actor.",
+        message: res.__("Actor.created"),
         obj: ex,
       }));
 }
@@ -58,11 +58,11 @@ function replace(req, res, next) {
   });
 
   Actor.findOneAndUpdate({ _id: id }, actor, { new: true }).then((obj) => res.status(200).json({
-        message: "Actor remplazado correctamente",
+        message: res.__("Actor.replaced"),
         obj: obj,
       })).catch((ex) =>
       res.status(500).json({
-        message: "No se pudo rempazar el actor.",
+        message: res.__("Actor.notReplaced"),
         obj: ex,
       }));
 }
@@ -77,10 +77,10 @@ function update(req, res, next) {
   if (lastName) actor._lastName = lastName;
 
   Actor.findOneAndUpdate({ _id: id }, actor).then((obj) => res.status(200).json({
-        message: "Actor actualizado correctamente.",
+        message: res.__("Actor.updated"),
         obj: obj,
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo actualizar el actor.",
+        message: res.__("Actor.notupdated"),
         obj: ex,
       }));
 }
@@ -88,10 +88,10 @@ function update(req, res, next) {
 function destroy(req, res, next) {
   const id = req.params.id;
   Actor.findByIdAndRemove({ _id: id }).then((obj) => res.status(200).json({
-        message: "Actor eliminado correctamente.",
+        message: res.__("Actor.deleted"),
         obj: obj,
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo eliminar el actor.",
+        message: res.__("Actor.notdeleted"),
         obj: ex,
       }));
 }

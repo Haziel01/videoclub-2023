@@ -24,12 +24,12 @@ function create(req, res, next) {
   member
     .save()
     .then((obj) => res.status(200).json({
-        message: "Member creado correctamente.",
+        message: res.__("Member.create"),
         obj: obj,
       })
     )
     .catch((ex) => res.status(500).json({
-        message: "No se pudo almacenar el miembro.",
+        message: res.__("Member.notcreate"),
         obj: ex,
       })
     );
@@ -42,10 +42,10 @@ function list(req, res, next) {
     limit: 5,
   };
   Member.paginate({}, options) .then((objs) => res.status(200).json({
-        message: "Lista de miembros.",
+        message: res.__("Member.list"),
         obj: objs,
       })).catch((ex) => res.status(500).json({
-        message: "No se puede consultar la lista de miembros.",
+        message: res.__("Member.notlist"),
         obj: ex,
       }));
 }
@@ -56,13 +56,13 @@ function index(req, res, next) {
   Member.findOne({ _id: id })
     .then((obj) =>
       res.status(200).json({
-        message: `Miembro con el id ${id}`,
+        message: res.__("Member.index"),
         obj: obj,
       })
     )
     .catch((ex) =>
       res.status(500).json({
-        message: "No se pudo consultar el miembro.",
+        message: res.__("Member.notindex"),
         obj: ex,
       })
     );
@@ -84,12 +84,12 @@ function replace(req, res, next) {
 
   Member.findOneAndUpdate({ _id: id }, member, { new: true })
     .then((obj) => res.status(200).json({
-        message: "Miembro remplazado correctamente",
+        message: res.__("Member.replaced"),
         obj: obj,
       })
     )
     .catch((ex) => res.status(500).json({
-        message: "No se pudo rempazar el miembro.",
+        message: res.__("Member.notreplaced"),
         obj: ex,
       })
     );
@@ -110,12 +110,12 @@ function update(req, res, next) {
 
   Member.findOneAndUpdate({ _id: id }, member)
     .then((obj) => res.status(200).json({
-        message: "Miembro eliminado correctamente.",
+        message: res.__("Member.update"),
         obj: obj,
       })
     )
     .catch((ex) => res.status(500).json({
-        message: "No se pudo rempazar el miembro.",
+        message: res.__("Member.notupdate"),
         obj: ex,
       })
     );
@@ -125,11 +125,11 @@ function destroy(req, res, next) {
   const id = req.params.id;
   Member.findByIdAndRemove({ _id: id })
     .then((obj) => res.status(200).json({
-        message: "Miembro eliminado correctamente.",
+        message: res.__("Member.delete"),
         obj: obj,
       })
     ).catch((ex) => res.status(500).json({
-        message: "No se pudo eliminar el miembro.",
+        message: res.__("Member.notdeleted"),
         obj: ex,
       }));
 }

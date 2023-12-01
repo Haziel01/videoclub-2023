@@ -1,15 +1,15 @@
 // Create proyect: express --view=pug video-club
+// express --view=pug ProjectManager
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const { accesibleRecordsPlugin } = require("@casl/mongoose");
 const mongoose = require("mongoose");
-const router = express.Router();
 const config = require('config');
+const i18n = require('i18n');
 const { expressjwt } = require("express-jwt");
-
-const jwtKey = config.get("secret.key");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -23,20 +23,25 @@ const bookingRouter = require('./routes/bookings');
 const awaitListRouter = require('./routes/awaitLists');
 const permissionRouter = require('./routes/permissions');
 
-const app = express();
-
+const jwtKey = config.get("secret.key");
 //mongodb://<dbUser>7:<dbPass>7@<URL>i<port>/<dbName>
 const url = config.get("dbChain");
 mongoose.connect(url);
-
 const db = mongoose.connection;
+const app = express();
+
 db.on('open', ()=>{
 	console.log("Conexión ok.");
 
 });
-
 db.on('error', ()=>{
 	console.log("No se ha podido conectar a la bd.");
+});
+
+i18n.configure({
+  locales: ['es', 'en'],
+  directory: `${__dirname}/locales`,
+  cookie: 'lenguage'
 });
 
 // view engine setup
@@ -48,6 +53,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(i18n.init);
 
 app.use(expressjwt({secret: jwtKey, algorithms: ['HS256']})
   .unless({path: ['/login','users']}));

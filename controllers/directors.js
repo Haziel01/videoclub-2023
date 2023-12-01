@@ -11,10 +11,10 @@ function create(req, res, next) {
   });
 
   director.save().then(obj => res.status(200).json({
-    message: "Director creado correctamente.",
+    message: res.__("Director.create"),
     obj: obj
   })).catch(ex => res.status(500).json({
-    message: "No se pudo almacenar el director.",
+    message: res.__("Director.notcreate"),
     obj: ex
   }));
 }
@@ -26,10 +26,10 @@ function list(req, res, next) {
     limit: 5
   };
   Director.paginate({},options).then(objs => res.status(200).json({
-    message: "Lista de directores.",
+    message: res.__("Director.list"),
     obj: objs
   })).catch(ex => res.status(500).json({
-    message: "No se puede consultar la lista de directores.",
+    message: res.__("Director.notlist"),
     obj: ex
   }));
 }
@@ -38,10 +38,10 @@ function index(req, res, next) {
   const id = req.params.id;
 
   Director.findOne({ _id: id }).then((obj) => res.status(200).json({
-        message: `Director con el id ${id}`,
+        message: res.__("Director.index"),
         obj: obj
       })).catch((ex) => res.status(500).json({
-        message: "No se pudo consultar el director.",
+        message: res.__("Director.notindex"),
         obj: ex,
       }));
 }
@@ -58,10 +58,10 @@ function replace(req, res, next) {
 
   Director.findOneAndUpdate({"_id": id}, director, { new: true })
   .then(obj => res.status(200).json({
-    message: "Director remplazado correctamente",
+    message: res.__("Director.replace"),
     obj: obj
   })).catch((ex) => res.status(500).json({
-        message: "No se pudo rempazar el director.",
+        message: res.__("Director.notreplace"),
         obj: ex,
   }));
 }
@@ -77,11 +77,11 @@ function update(req, res, next) {
 
   Director.findOneAndUpdate({ _id: id }, director)
     .then((obj) => res.status(200).json({
-        message: "Director eliminado correctamente.",
+        message: res.__("Director.update"),
         obj: obj,
     }))
     .catch((ex) => res.status(500).json({
-        message: "No se pudo rempazar el director.",
+        message: res.__("Director.notupdate"),
         obj: ex,
     }));
 }
@@ -89,10 +89,10 @@ function update(req, res, next) {
 function destroy(req, res, next) {
   const id = req.params.id;
   Director.findByIdAndRemove({"_id": id}).then(obj => res.status(200).json({
-    message: "Director eliminado correctamente",
+    message: res.__("Director.delete"),
     obj: obj
   })).catch((ex) => res.status(500).json({
-        message: "No se pudo eliminar el director.",
+        message: res.__("Director.notdelete"),
         obj: ex,
   }));
 }
